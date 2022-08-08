@@ -77,9 +77,10 @@ const data = createComplexArray(size, (t) => {
   const cos = [12, 5, 16];
   const sin = [1, 8];
   return (
+    Math.random() -
+    0.5 +
     cos.reduce((sum, val) => sum + Math.cos(t * 2 * Math.PI * val), 0) +
-    sin.reduce((sum, val) => sum + Math.sin(t * 2 * Math.PI * val), 0) +
-    1
+    sin.reduce((sum, val) => sum + Math.sin(t * 2 * Math.PI * val), 0)
   );
 });
 const mat = createMat(size);
@@ -152,7 +153,15 @@ const cosTrans = computed(() => {
       ret[j] += 2 * fac[i] * Math.cos((2 * Math.PI * i * j) / size - arg[i]);
     }
   }
-  console.log(ret);
+  // let toString: string[] = [];
+  // for (var i = 0; i < size / 2 + 1; i++) {
+  //   toString.push(
+  //     `${(2 * fac[i]).toFixed(5)}cos(${(2 * i).toFixed(5)}pix-${arg[i].toFixed(
+  //       5
+  //     )})`
+  //   );
+  // }
+  // console.log(toString.join("+"));
   return [ret];
 });
 </script>
