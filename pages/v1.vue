@@ -82,7 +82,7 @@ const createMat = (size: number) => {
         j,
         new Complex(
           Math.cos((2 * Math.PI * i * j) / size),
-          Math.sin((2 * Math.PI * i * j) / size)
+          -Math.sin((2 * Math.PI * i * j) / size)
         )
       );
     }
