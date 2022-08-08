@@ -25,24 +25,18 @@ class ComplexArray {
   }
 }
 class Mat {
-  data: ComplexArray[];
   size: number;
   constructor(size: number) {
     this.size = size;
-    this.data = Array(size);
-    for (var i = 0; i < size; i++) {
-      this.data[i] = new ComplexArray(size);
-    }
   }
   mul(b: ComplexArray, result: ComplexArray) {
     for (var i = 0; i < this.size; i++) {
       let re = 0;
       let im = 0;
-      const current = this.data[i];
       for (var j = 0; j < this.size; j++) {
-        const ar = current.re[j],
+        const ar = Math.cos((2 * Math.PI * i * j) / size),
           br = b.re[j],
-          ai = current.im[j],
+          ai = -Math.sin((2 * Math.PI * i * j) / size),
           bi = b.im[j];
         re += ar * br - ai * bi;
         im += ar * bi + ai * br;
@@ -63,16 +57,11 @@ const createComplexArray = (length: number, func: (val: number) => number) => {
 
 const createMat = (size: number) => {
   const ret = new Mat(size);
-  for (var i = 0; i < size; i++) {
-    for (var j = 0; j < size; j++) {
-      ret.data[i].re[j] = Math.cos((2 * Math.PI * i * j) / size);
-      ret.data[i].im[j] = -Math.sin((2 * Math.PI * i * j) / size);
-    }
-  }
   return ret;
 };
 
-const size = 4096;
+const size = 4 ** 6;
+
 const data = createComplexArray(size, (t) => {
   const cos = [12, 5, 16];
   const sin = [1, 8];

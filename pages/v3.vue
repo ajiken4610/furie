@@ -31,7 +31,7 @@ const createComplexArray = (length: number, func: (val: number) => number) => {
   return ret;
 };
 
-const deg = 6;
+const deg = 8;
 const ndeg = 4 ** deg;
 const data = createComplexArray(ndeg, (t) => {
   const cos = [12, 5, 16];
