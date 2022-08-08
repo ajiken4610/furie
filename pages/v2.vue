@@ -3,6 +3,7 @@
   GraphView.graph(:data="graphData")
   GraphView.graph(:data="resultGraphData")
   GraphView.graph(:data="reversedGraphData")
+  GraphView.graph(:data="[diff]")
 </template>
 
 <script setup lang="ts">
@@ -71,7 +72,16 @@ const createMat = (size: number) => {
 };
 
 const size = 2048;
-const data = createComplexArray(size, (t) => +Math.sin(2 * Math.PI * 16 * t));
+const data = createComplexArray(size, (t) => {
+  const cos = [1, 2, 3, 8];
+  const sin = [14, 5, 6];
+  return (
+    Math.random() -
+    0.5 +
+    (cos.reduce((sum, val) => sum + Math.cos(t * 2 * Math.PI * val), 0) +
+      sin.reduce((sum, val) => sum + Math.sin(t * 2 * Math.PI * val), 0))
+  );
+});
 const mat = createMat(size);
 const result = new ComplexArray(size);
 const startTime = Date.now();
@@ -100,11 +110,13 @@ const resultGraphData = computed(() => {
   return ret;
 });
 
+const diff = ref<number[]>([]);
+
 const reversedGraphData = computed(() => {
   const inverted = new ComplexArray(size);
   result.invert(inverted);
   for (var i = 0; i < size / 2; i++) {
-    inverted.re[size - i] = -inverted.re[i];
+    inverted.re[size - i] = inverted.re[i];
     inverted.im[size - i] = -inverted.im[i];
   }
   const reversed = new ComplexArray(size);
@@ -113,6 +125,11 @@ const reversedGraphData = computed(() => {
   const ret: number[] = [];
   for (var i = 0; i < size; i++) {
     ret.push((reversed.re[i] + reversed.im[i]) / size);
+  }
+
+  diff.value = [];
+  for (var i = 0; i < size; i++) {
+    diff.value.push((reversed.re[i] + reversed.im[i]) / size - data.re[i]);
   }
   return [ret];
 });
