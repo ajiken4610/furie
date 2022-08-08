@@ -4,6 +4,7 @@
   GraphView.graph(:data="resultGraphData")
   GraphView.graph(:data="reversedGraphData")
   GraphView.graph(:data="[diff]")
+  GraphView.graph(:data="cosTrans")
 </template>
 
 <script setup lang="ts">
@@ -73,11 +74,12 @@ const createMat = (size: number) => {
 
 const size = 4096;
 const data = createComplexArray(size, (t) => {
-  const cos = [1, 6, 12, 65, 15];
-  const sin = [75, 12, 16];
+  const cos = [12, 5, 16];
+  const sin = [1, 8];
   return (
     cos.reduce((sum, val) => sum + Math.cos(t * 2 * Math.PI * val), 0) +
-    sin.reduce((sum, val) => sum + Math.sin(t * 2 * Math.PI * val), 0)
+    sin.reduce((sum, val) => sum + Math.sin(t * 2 * Math.PI * val), 0) +
+    1
   );
 });
 const mat = createMat(size);
@@ -130,6 +132,27 @@ const reversedGraphData = computed(() => {
   for (var i = 0; i < size; i++) {
     diff.value.push((reversed.re[i] + reversed.im[i]) / size - data.re[i]);
   }
+  return [ret];
+});
+
+const cosTrans = computed(() => {
+  const fac: number[] = Array(size / 2 + 1);
+  const arg: number[] = Array(size / 2 + 1);
+  for (var i = 0; i < size / 2 + 1; i++) {
+    fac[i] =
+      Math.sqrt(result.re[i] * result.re[i] + result.im[i] * result.im[i]) /
+      size;
+    arg[i] = Math.atan2(result.im[i], result.re[i]);
+  }
+  fac[0] /= 2;
+  const ret: number[] = Array(size);
+  ret.fill(0);
+  for (var i = 0; i < size / 2 + 1; i++) {
+    for (var j = 0; j < size; j++) {
+      ret[j] += 2 * fac[i] * Math.cos((2 * Math.PI * i * j) / size - arg[i]);
+    }
+  }
+  console.log(ret);
   return [ret];
 });
 </script>
