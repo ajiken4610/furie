@@ -2,7 +2,7 @@
 .mx-4
   GraphView.graph(:data="graphData")
   GraphView.graph(:data="resultGraphData")
-
+  GraphView.graph(:data="reversedGraphData")
 </template>
 
 <script setup lang="ts">
@@ -51,7 +51,7 @@ const graphData = (() => {
   return [ret];
 })();
 const result = createComplexArray(ndeg, () => 0);
-const startTime = Date.now();
+
 const transform = (data: ComplexArray, result: ComplexArray) => {
   for (var i = 1; i < deg + 1; i++) {
     const pdeg = 4 ** (deg - i);
@@ -130,13 +130,13 @@ const transform = (data: ComplexArray, result: ComplexArray) => {
     result.re[i] = data.re[k1];
     result.im[i] = data.im[k1];
   }
-  result.re = result.re.slice(0, ndeg / 2 + 1);
-  result.im = result.im.slice(0, ndeg / 2 + 1);
 };
+const startTime = Date.now();
 transform(data, result);
+result.re = result.re.slice(0, ndeg / 2 + 1);
+result.im = result.im.slice(0, ndeg / 2 + 1);
 const finishTime = Date.now();
 console.log(finishTime - startTime);
-console.log(result);
 
 const resultGraphData = (() => {
   const ret: [number[], number[]] = [[], []];
@@ -148,6 +148,24 @@ const resultGraphData = (() => {
   }
   return ret;
 })();
+
+const reversedGraphData = computed(() => {
+  const inverted = new ComplexArray(ndeg);
+  result.invert(inverted);
+  for (var i = 0; i < ndeg / 2; i++) {
+    inverted.re[ndeg - i] = inverted.re[i];
+    inverted.im[ndeg - i] = -inverted.im[i];
+  }
+  const reversed = new ComplexArray(ndeg);
+
+  transform(inverted, reversed);
+  reversed.invert(reversed);
+  const ret: number[] = [];
+  for (var i = 0; i < ndeg; i++) {
+    ret.push((reversed.re[i] + reversed.im[i]) / ndeg);
+  }
+  return [ret];
+});
 </script>
 <style scoped lang="scss">
 .graph {
