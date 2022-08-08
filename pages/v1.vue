@@ -26,6 +26,9 @@ class Complex {
       Math.round(this.im * 10) / 10
     })`;
   }
+  invert() {
+    return new Complex(this.re, -this.im);
+  }
 }
 class Mat {
   array: Complex[];
@@ -86,13 +89,17 @@ const createMat = (size: number) => {
   }
   return ret;
 };
-const size = 64;
+
+const size = 2048;
 const data = createComplexVec(
   size,
   (t) => Math.random() - 0.5 + Math.sin(2 * Math.PI * 16 * t)
 );
 const mat = createMat(size);
-const result = mat.mul(data).slice(0, size / 2);
+const startTime = Date.now();
+const result = mat.mul(data).slice(0, size / 2 + 1);
+const finishTime = Date.now();
+console.log(finishTime - startTime);
 
 // console.log(result.join("\n"));
 
@@ -111,10 +118,6 @@ const resultGraphData = computed(() => {
     ret[1].push(current.im / size);
   }
   return ret;
-});
-
-const reversedGraphData = computed(() => {
-  const ret = [];
 });
 </script>
 
