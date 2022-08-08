@@ -66,7 +66,7 @@ const createMat = (size: number) => {
   for (var i = 0; i < size; i++) {
     for (var j = 0; j < size; j++) {
       ret.data[i].re[j] = Math.cos((2 * Math.PI * i * j) / size);
-      ret.data[i].im[j] = Math.sin((2 * Math.PI * i * j) / size);
+      ret.data[i].im[j] = -Math.sin((2 * Math.PI * i * j) / size);
     }
   }
   return ret;
@@ -150,7 +150,7 @@ const cosTrans = computed(() => {
   ret.fill(0);
   for (var i = 0; i < size / 2 + 1; i++) {
     for (var j = 0; j < size; j++) {
-      ret[j] += 2 * fac[i] * Math.cos((2 * Math.PI * i * j) / size - arg[i]);
+      ret[j] += 2 * fac[i] * Math.cos((2 * Math.PI * i * j) / size + arg[i]);
     }
   }
   // let toString: string[] = [];
