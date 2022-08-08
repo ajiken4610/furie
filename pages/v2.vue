@@ -71,15 +71,13 @@ const createMat = (size: number) => {
   return ret;
 };
 
-const size = 2048;
+const size = 4096;
 const data = createComplexArray(size, (t) => {
-  const cos = [1, 2, 3, 8];
-  const sin = [14, 5, 6];
+  const cos = [1, 6, 12, 65, 15];
+  const sin = [75, 12, 16];
   return (
-    Math.random() -
-    0.5 +
-    (cos.reduce((sum, val) => sum + Math.cos(t * 2 * Math.PI * val), 0) +
-      sin.reduce((sum, val) => sum + Math.sin(t * 2 * Math.PI * val), 0))
+    cos.reduce((sum, val) => sum + Math.cos(t * 2 * Math.PI * val), 0) +
+    sin.reduce((sum, val) => sum + Math.sin(t * 2 * Math.PI * val), 0)
   );
 });
 const mat = createMat(size);
@@ -102,10 +100,10 @@ const graphData = computed(() => {
 const resultGraphData = computed(() => {
   const ret: [number[], number[]] = [[], []];
   for (const current of result.re) {
-    ret[0].push(current / size);
+    ret[0].push(current);
   }
   for (const current of result.im) {
-    ret[1].push(current / size);
+    ret[1].push(current);
   }
   return ret;
 });
@@ -120,6 +118,7 @@ const reversedGraphData = computed(() => {
     inverted.im[size - i] = -inverted.im[i];
   }
   const reversed = new ComplexArray(size);
+
   mat.mul(inverted, reversed);
   reversed.invert(reversed);
   const ret: number[] = [];
