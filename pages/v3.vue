@@ -1,7 +1,7 @@
 <template lang="pug">
 .mx-4
   GraphView.graph(:data="graphData")
-  GraphView.graph(:data="resultGraphData")
+  GraphView.graph(:data="resultGraphData" :logScale="true")
   GraphView.graph(:data="reversedGraphData")
 </template>
 
