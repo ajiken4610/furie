@@ -90,11 +90,17 @@ const createMat = (size: number) => {
   return ret;
 };
 
-const size = 2048;
-const data = createComplexVec(
-  size,
-  (t) => Math.random() - 0.5 + Math.sin(2 * Math.PI * 16 * t)
-);
+const size = 4 ** 8;
+const data = createComplexVec(size, (t) => {
+  const cos = [12, 5, 16];
+  const sin = [1, 8];
+  return (
+    Math.random() -
+    0.5 +
+    cos.reduce((sum, val) => sum + Math.cos(t * 2 * Math.PI * val), 0) +
+    sin.reduce((sum, val) => sum + Math.sin(t * 2 * Math.PI * val), 0)
+  );
+});
 const mat = createMat(size);
 const startTime = Date.now();
 const result = mat.mul(data).slice(0, size / 2 + 1);

@@ -60,7 +60,7 @@ const createMat = (size: number) => {
   return ret;
 };
 
-const size = 4 ** 6;
+const size = 4 ** 8;
 
 const data = createComplexArray(size, (t) => {
   const cos = [12, 5, 16];
