@@ -4,7 +4,11 @@ canvas.w-100(ref="canvas")
 
 <script setup lang="ts">
 const canvas = ref<HTMLCanvasElement>();
-const props = defineProps<{ data: number[][]; logScale?: boolean }>();
+const props = defineProps<{
+  data: number[][];
+  logScale?: boolean;
+  offset?: number;
+}>();
 const draw = (context: CanvasRenderingContext2D) => {
   const width = (canvas.value.width = canvas.value.offsetWidth);
   const height = (canvas.value.height = canvas.value.offsetHeight);
@@ -17,6 +21,7 @@ const draw = (context: CanvasRenderingContext2D) => {
     }
   }
   let index = 0;
+  const offset = props.offset || 0;
   for (const data of props.data) {
     context.beginPath();
     context.moveTo(0, (1 - (data[0] - min) / (max - min)) * height);
@@ -24,8 +29,8 @@ const draw = (context: CanvasRenderingContext2D) => {
       const current = data[i];
       context.lineTo(
         !props.logScale
-          ? (i / (data.length - 1)) * width
-          : (-Math.pow(1 - i / (data.length - 1), 10) + 1) * width,
+          ? (i / (data.length - 1) + offset) * width
+          : (-Math.pow(1 - i / (data.length - 1), 10) + 1 + offset) * width,
         (1 - (current - min) / (max - min)) * height
       );
     }
